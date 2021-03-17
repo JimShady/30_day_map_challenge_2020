@@ -1,0 +1,7 @@
+{
+    "installOptions": {
+        "installFromRepository": true,
+        "libraryPath": "C:/Users/u1191972/R_Library",
+        "installDependencies": true
+    }
+}

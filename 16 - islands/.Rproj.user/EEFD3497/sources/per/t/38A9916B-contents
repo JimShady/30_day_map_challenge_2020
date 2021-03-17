@@ -1,0 +1,22 @@
+library(RPostgres)
+library(tidyverse)
+library(glue)
+
+config <- read_csv('../../config_files/spire-vessel-scraping.csv')
+
+con                       <- dbConnect(RPostgres::Postgres(),
+                                       dbname = config$dbname,
+                                       host = config$host,
+                                       port = config$port,
+                                       user = config$user,
+                                       password = config$password)
+
+mmsi <- 232001270
+
+one_vessel <- dbGetQuery(con, glue("SELECT st_x(geometry) as longitude,
+                                           st_y(geometry) as latitude,
+                                           scrape_time
+                                    FROM   vessel_table 
+                                    WHERE  mmsi = {mmsi}"))
+
+write_csv(one_vessel, 'scillonian.csv')

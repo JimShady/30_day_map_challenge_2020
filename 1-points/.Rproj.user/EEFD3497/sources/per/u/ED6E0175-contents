@@ -1,0 +1,13 @@
+library(sf)
+
+msoa_geo <- st_read('Middle_Layer_Super_Output_Areas__December_2001__Boundaries-shp/Middle_Layer_Super_Output_Areas__December_2001__Boundaries.shp')
+
+msoa_names <- read_csv('MSOA-Names-1.6.0.csv')
+
+msoa <- left_join(msoa_geo, msoa_names, by = c("msoa01cd" = "msoa11cd")) %>%
+        select(msoa11hclnm) %>%
+        mutate(name_length = nchar(msoa11hclnm)) %>%
+        select(-msoa11hclnm) %>%
+        mutate(geometry = st_centroid(geometry))
+
+st_write(msoa, 'msoa_names_centroids.geojson')
